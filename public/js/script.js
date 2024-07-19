@@ -27,7 +27,7 @@ function sendGeolocation() {
 // Send geolocation every 5 seconds
 setInterval(sendGeolocation, 5000);
 
-const map = L.map("map").setView([0,0], 10); // Set default view to Manipal
+const map = L.map("map").setView([0, 0], 10); // Set default view to Manipal
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "OpenStreetMap",
@@ -35,13 +35,21 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markers = {};
 
+// Define a custom icon
+const customIcon = L.icon({
+    iconUrl: '../images/perssonIcon.jpg', // Replace with the path to your image
+    iconSize: [38, 38], // Adjust the size of the icon as needed
+    iconAnchor: [22, 38], // Adjust the anchor point as needed
+    popupAnchor: [-3, -38] // Adjust the popup anchor point as needed
+});
+
 socket.on("receive-location", (data) => {
     const { id, latitude, longitude } = data;
     console.log(`Received location from ${id}: Latitude: ${latitude}, Longitude: ${longitude}, Timestamp: ${new Date().toISOString()}`);
     if (markers[id]) {
         markers[id].setLatLng([latitude, longitude]);
     } else {
-        markers[id] = L.marker([latitude, longitude]).addTo(map);
+        markers[id] = L.marker([latitude, longitude], { icon: customIcon }).addTo(map);
     }
     map.setView([latitude, longitude], 16); // Update map view to the latest location
 });
