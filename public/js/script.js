@@ -10,12 +10,11 @@ function sendGeolocation() {
             },
             (error) => {
                 console.error("Geolocation error:", error);
-                // Retry after a delay if there's an error
                 setTimeout(sendGeolocation, 5000);
             },
             {
                 enableHighAccuracy: true,
-                timeout: 10000, // Increase the timeout to 10 seconds
+                timeout: 5000, 
                 maximumAge: 0,
             }
         );
@@ -27,7 +26,7 @@ function sendGeolocation() {
 // Send geolocation every 5 seconds
 setInterval(sendGeolocation, 5000);
 
-const map = L.map("map").setView([0, 0], 10); // Set default view to Manipal
+const map = L.map("map").setView([0, 0], 10);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "OpenStreetMap",
@@ -35,12 +34,12 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markers = {};
 
-// Define a custom icon
+// Defining a custom icon
 const customIcon = L.icon({
-    iconUrl: '../images/perssonIcon.jpg', // Replace with the path to your image
-    iconSize: [38, 38], // Adjust the size of the icon as needed
-    iconAnchor: [22, 38], // Adjust the anchor point as needed
-    popupAnchor: [-3, -38] // Adjust the popup anchor point as needed
+    iconUrl: '../images/perssonIcon.jpg', 
+    iconSize: [38, 38], 
+    iconAnchor: [22, 38], 
+    popupAnchor: [-3, -38]
 });
 
 socket.on("receive-location", (data) => {
@@ -51,7 +50,9 @@ socket.on("receive-location", (data) => {
     } else {
         markers[id] = L.marker([latitude, longitude], { icon: customIcon }).addTo(map);
     }
-    map.setView([latitude, longitude], 16); // Update map view to the latest location
+ 
+
+    map.setView([latitude, longitude],16); 
 });
 
 socket.on("user-disconnected", (id) => {
